@@ -27,12 +27,21 @@ function getTokenPayload() {
         return null;
     }
 }
+
+// VERSÃO CORRIGIDA
 async function fetchWithAuth(url, options = {}) {
     const token = localStorage.getItem('authToken');
-    const headers = { 'Content-Type': 'application/json', ...options.headers };
+    const headers = { ...options.headers };
+
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
+
+    // Só define Content-Type se não for um upload de arquivo (FormData)
+    if (!(options.body instanceof FormData)) {
+        headers['Content-Type'] = 'application/json';
+    }
+
     const response = await fetch(url, { ...options, headers });
     if (response.status === 401 || response.status === 403) {
         logout();

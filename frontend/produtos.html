@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Produtos</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="min-h-screen">
+      <div class="sticky top-0 z-10 bg-gray-100 pb-2">
+        <div class="flex items-center p-4 justify-between">
+          <a
+            href="/painel-empresa.html"
+            class="p-2 rounded-full hover:bg-gray-200"
+            ><span class="material-symbols-outlined">arrow_back</span></a
+          >
+          <h1 class="text-xl font-bold text-gray-900 flex-1 text-center">
+            Produtos
+          </h1>
+          <div class="w-10"></div>
+        </div>
+        <div class="px-4 py-2">
+          <div
+            id="status-filter"
+            class="flex h-10 items-center justify-center rounded-lg bg-gray-200 p-1"
+          >
+            <label class="tab-filter active"
+              ><input
+                type="radio"
+                name="status"
+                value="ativo"
+                checked
+                class="hidden"
+              /><span>Ativos</span></label
+            >
+            <label class="tab-filter"
+              ><input
+                type="radio"
+                name="status"
+                value="inativo"
+                class="hidden"
+              /><span>Inativos</span></label
+            >
+            <label class="tab-filter"
+              ><input
+                type="radio"
+                name="status"
+                value="deletado"
+                class="hidden"
+              /><span>Lixeira</span></label
+            >
+          </div>
+        </div>
+        <div id="mass-actions-bar" class="px-4 pt-2 flex gap-2 hidden">
+          <button id="btn-inativar-massa" class="btn-massa bg-yellow-500">
+            Inativar
+          </button>
+          <button id="btn-excluir-massa" class="btn-massa bg-red-600">
+            Mover para Lixeira
+          </button>
+        </div>
+      </div>
+
+      <main id="product-list" class="flex-1 px-4 py-2 space-y-4 pb-24"></main>
+
+      <div class="fixed bottom-6 right-6 z-20">
+        <a
+          href="/cadastrar-produto.html"
+          class="flex items-center justify-center rounded-full h-14 w-14 bg-blue-600 text-white shadow-lg"
+          ><span class="material-symbols-outlined text-3xl">add</span></a
+        >
+      </div>
+    </div>
+
+    <div
+      id="product-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+    >
+      <div
+        id="modal-content"
+        class="bg-white rounded-xl w-full max-w-lg max-h-[90vh] flex flex-col"
+      >
+        <header class="p-4 border-b flex justify-between items-center">
+          <h2 id="modal-title" class="text-xl font-bold">Editar Produto</h2>
+          <button
+            id="btn-modal-close"
+            class="p-2 rounded-full hover:bg-gray-100"
+          >
+            &times;
+          </button>
+        </header>
+
+        <div class="p-6 space-y-4 overflow-y-auto">
+          <form id="form-edit-produto" class="space-y-4">
+            <input type="hidden" id="edit-id" />
+            <div>
+              <p class="font-medium mb-2">Imagens</p>
+              <div
+                id="modal-gallery"
+                class="grid grid-cols-3 sm:grid-cols-4 gap-4"
+              ></div>
+              <label
+                for="modal-imagens"
+                class="mt-4 flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50"
+              >
+                <span class="material-symbols-outlined text-gray-500"
+                  >add_photo_alternate</span
+                >
+                <p class="text-sm text-gray-500">Adicionar novas imagens</p>
+              </label>
+              <input
+                id="modal-imagens"
+                type="file"
+                class="hidden"
+                multiple
+                accept="image/png, image/jpeg"
+              />
+            </div>
+            <div>
+              <label>Nome do Produto</label
+              ><input id="edit-nome" class="form-input mt-1" />
+            </div>
+            <div>
+              <label>Código (SKU)</label
+              ><input id="edit-codigo" class="form-input mt-1" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label>Preço</label
+                ><input
+                  id="edit-preco"
+                  type="number"
+                  step="0.01"
+                  class="form-input mt-1"
+                />
+              </div>
+              <div>
+                <label>Estoque</label
+                ><input
+                  id="edit-estoque"
+                  type="number"
+                  class="form-input mt-1"
+                />
+              </div>
+            </div>
+            <div>
+              <label>Categoria</label
+              ><input id="edit-categoria" class="form-input mt-1" />
+            </div>
+            <div>
+              <label>Descrição</label
+              ><textarea
+                id="edit-descricao"
+                class="form-input min-h-24 mt-1"
+              ></textarea>
+            </div>
+          </form>
+        </div>
+
+        <footer class="p-4 bg-gray-50 border-t grid grid-cols-3 gap-4 mt-auto">
+          <button id="btn-modal-delete" class="btn-modal bg-red-600">
+            Mover para Lixeira
+          </button>
+          <button id="btn-modal-inactivate" class="btn-modal bg-yellow-500">
+            Inativar
+          </button>
+          <button id="btn-modal-save" class="btn-modal bg-blue-600">
+            Salvar Alterações
+          </button>
+        </footer>
+      </div>
+    </div>
+
+    <style>
+      .tab-filter {
+        cursor: pointer;
+        height: 100%;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+        padding: 0 0.5rem;
+        color: #6b7280;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .tab-filter.active {
+        background-color: #fff;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        color: #1173d4;
+      }
+      .btn-modal {
+        color: white;
+        font-weight: bold;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        transition: opacity 0.2s;
+      }
+      .btn-modal:hover {
+        opacity: 0.9;
+      }
+      .btn-massa {
+        color: white;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        flex-grow: 1;
+      }
+      .form-input {
+        width: 100%;
+        border-radius: 0.5rem;
+        border: 1px solid #d1d5db;
+        padding: 0.75rem 1rem;
+      }
+      .preview-image {
+        position: relative;
+        cursor: grab;
+      }
+      .remove-image {
+        position: absolute;
+        top: -0.5rem;
+        right: -0.5rem;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        border-radius: 99px;
+        width: 1.5rem;
+        height: 1.5rem;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+    <script src="/js/auth.js"></script>
+    <script src="/js/produtos.js"></script>
+  </body>
+</html>
