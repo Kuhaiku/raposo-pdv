@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Criar Conta - Raposo PDV</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="relative flex min-h-screen w-full flex-col items-center justify-center p-4">
+        <div class="w-full max-w-sm">
+            <div class="text-center mb-8">
+                 <h1 class="text-gray-800 text-3xl font-bold">Crie sua conta</h1>
+                 <p class="text-gray-500 text-base mt-2">Preencha os campos para começar a vender.</p>
+            </div>
+            <form id="cadastro-form" class="flex flex-col gap-4">
+                <label class="flex flex-col">
+                    <p class="text-gray-800 text-base font-medium pb-2">Nome da Empresa</p>
+                    <div class="relative"><input id="nome_empresa" class="w-full h-14 p-4 rounded-lg border border-gray-300" placeholder="O nome do seu negócio" required/><span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">store</span></div>
+                </label>
+                 <label class="flex flex-col">
+                    <p class="text-gray-800 text-base font-medium pb-2">Seu Nome Completo</p>
+                    <div class="relative"><input id="nome_usuario" class="w-full h-14 p-4 rounded-lg border border-gray-300" placeholder="Seu nome como administrador" required/><span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">person</span></div>
+                </label>
+                <label class="flex flex-col">
+                    <p class="text-gray-800 text-base font-medium pb-2">Seu E-mail (será seu login)</p>
+                    <div class="relative"><input id="email" class="w-full h-14 p-4 rounded-lg border border-gray-300" placeholder="seuemail@exemplo.com" type="email" required/><span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">mail</span></div>
+                </label>
+                <label class="flex flex-col">
+                    <p class="text-gray-800 text-base font-medium pb-2">Senha</p>
+                    <div class="relative"><input id="senha" class="w-full h-14 p-4 rounded-lg border border-gray-300" placeholder="Crie uma senha forte" type="password" required/><span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">lock</span></div>
+                </label>
+                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-4 px-4 rounded-lg hover:bg-blue-700 mt-4">Cadastrar</button>
+            </form>
+             <div id="error-message" class="text-red-600 text-center mt-4 h-5"></div>
+             <div id="success-message" class="text-green-600 text-center mt-4 h-5"></div>
+            <p class="text-center text-gray-500 mt-6 text-base">Já possui uma conta? <a class="font-bold text-blue-600 hover:underline" href="/login.html">Entrar</a></p>
+        </div>
+    </div>
+    <script src="/js/cadastro.js"></script>
+</body>
+</html>

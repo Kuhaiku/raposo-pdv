@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Painel do Vendedor</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="relative min-h-screen w-full flex-col">
+      <header
+        class="flex items-center bg-gray-100 p-4 pb-2 justify-between sticky top-0 z-10"
+      >
+        <div class="size-12"></div>
+        <h2 id="welcome-message" class="text-slate-900 text-lg font-bold">
+          Olá!
+        </h2>
+        <div class="w-12 text-right">
+          <button id="logout-button" class="cursor-pointer">
+            <span class="material-symbols-outlined">logout</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="p-4 pb-24">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="card">
+            <p class="card-title">Vendas Totais</p>
+            <p id="vendas-totais" class="card-value">R$ 0,00</p>
+          </div>
+          <div class="card">
+            <p class="card-title">Comissão (15%)</p>
+            <p id="comissao" class="card-value">R$ 0,00</p>
+          </div>
+          <div class="card col-span-2">
+            <p class="card-title">Ticket Médio</p>
+            <p id="ticket-medio" class="card-value">R$ 0,00</p>
+          </div>
+        </div>
+        <h3 class="text-lg font-bold pt-6 pb-2">Vendas por período</h3>
+        <div id="periodo-filters" class="flex gap-3 pb-3">
+          <button data-periodo="hoje" class="btn-periodo active">Hoje</button>
+          <button data-periodo="semana" class="btn-periodo">Esta Semana</button>
+          <button data-periodo="mes" class="btn-periodo">Este Mês</button>
+        </div>
+        <div class="p-4 bg-white rounded-xl shadow-sm">
+          <p class="text-base text-gray-600">
+            Vendas de <span id="periodo-label">Hoje</span>
+          </p>
+          <p id="vendas-periodo-total" class="text-3xl font-bold">R$ 0,00</p>
+          <div
+            id="sales-chart"
+            class="grid min-h-[180px] grid-flow-col gap-4 items-end justify-items-center pt-4"
+          ></div>
+        </div>
+
+        <div class="py-6">
+          <button
+            id="btn-abrir-modal-fechar"
+            class="w-full h-12 flex items-center justify-center rounded-xl bg-red-600 text-white font-bold"
+          >
+            Fechar Período
+          </button>
+        </div>
+      </main>
+
+      <footer
+        class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around p-2"
+      >
+        <a href="/painel.html" class="nav-item active"
+          ><span class="material-symbols-outlined">dashboard</span
+          ><span class="text-xs">Painel</span></a
+        >
+        <a href="#" class="nav-item"
+          ><span class="material-symbols-outlined">receipt_long</span
+          ><span class="text-xs">Vendas</span></a
+        >
+        <a href="#" class="nav-item"
+          ><span class="material-symbols-outlined">groups</span
+          ><span class="text-xs">Clientes</span></a
+        >
+        <a href="#" class="nav-item"
+          ><span class="material-symbols-outlined">inventory_2</span
+          ><span class="text-xs">Produtos</span></a
+        >
+      </footer>
+    </div>
+
+    <div
+      id="modal-fechar-periodo"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 hidden"
+    >
+      <div class="bg-white rounded-xl p-6 w-full max-w-sm">
+        <h3 class="text-xl font-bold mb-2">Confirmar Fechamento</h3>
+        <p class="text-gray-600 mb-4">
+          Digite sua senha para confirmar o encerramento do período de vendas.
+        </p>
+        <form id="form-fechar-periodo">
+          <div class="mb-4">
+            <label for="senha-confirmacao" class="font-medium mb-1 block"
+              >Sua Senha</label
+            >
+            <input
+              type="password"
+              id="senha-confirmacao"
+              class="w-full h-12 px-4 rounded-lg border border-gray-300"
+              required
+            />
+          </div>
+          <div
+            id="modal-error-message"
+            class="text-red-600 text-sm mb-4 h-5"
+          ></div>
+          <div class="flex gap-4">
+            <button
+              type="button"
+              id="btn-cancelar-fechamento"
+              class="w-full h-12 rounded-lg bg-gray-200 font-bold"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="w-full h-12 rounded-lg bg-red-600 text-white font-bold"
+            >
+              Confirmar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <style>
+      .card {
+        padding: 1rem;
+        border-radius: 0.75rem;
+        background-color: #fff;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      }
+      .card-title {
+        font-size: 0.875rem;
+        color: #4b5563;
+      }
+      .card-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+      .btn-periodo {
+        padding: 0.25rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        background-color: #fff;
+        color: #4b5563;
+      }
+      .btn-periodo.active {
+        background-color: #2196f3;
+        color: #fff;
+      }
+      .nav-item {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        width: 5rem;
+      }
+      .nav-item.active {
+        color: #2196f3;
+      }
+    </style>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/painel.js"></script>
+  </body>
+</html>
