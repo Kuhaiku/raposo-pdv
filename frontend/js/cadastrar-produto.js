@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let filesToUpload = [];
 
     inputImagens.addEventListener('change', (e) => {
-        filesToUpload = Array.from(e.target.files);
+        // Adiciona os novos arquivos à lista, em vez de substituir
+        filesToUpload.push(...Array.from(e.target.files));
         renderPreviews();
     });
 
@@ -34,12 +35,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const index = parseInt(e.target.dataset.index, 10);
             filesToUpload.splice(index, 1);
             renderPreviews();
+            // Limpa o input para permitir selecionar o mesmo arquivo novamente se o usuário quiser
+            inputImagens.value = '';
         }
     });
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         feedbackMessage.textContent = '';
+        const submitButton = form.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.textContent = 'Salvando...';
         
         const formData = new FormData();
         formData.append('nome', document.getElementById('nome').value);
@@ -50,15 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('descricao', document.getElementById('descricao').value);
         
         filesToUpload.forEach(file => {
-            formData.append('imagens', file);
+            formData.append('imagens', file); // 'imagens' é o nome do campo esperado pelo Multer
         });
 
         try {
-            // fetchWithAuth precisa ser adaptado para lidar com FormData
-            const token = localStorage.getItem('authToken');
-            const response = await fetch('/api/produtos', {
+            // Usamos a função fetchWithAuth que agora lida com FormData corretamente
+            const response = await fetchWithAuth('/api/produtos', {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
                 body: formData
             });
 
@@ -74,6 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             feedbackMessage.textContent = error.message;
             feedbackMessage.style.color = 'red';
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Salvar Produto';
         }
     });
 });
